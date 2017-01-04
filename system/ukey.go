@@ -1,14 +1,3 @@
-/*
-* (C) 2001-2017 humpback Inc.
-*
-* gounits source code
-* version: 1.0.0
-* author: bobliu0909@gmail.com
-* datetime: 2015-10-14
-* 生成规则：uuid
-* 生成一个KeyFile，如果文件不存在则自动创建，否则直接读取.
- */
-
 package system
 
 import "github.com/google/uuid"

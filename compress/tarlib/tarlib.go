@@ -1,13 +1,3 @@
-/*
-* (C) 2001-2017 humpback Inc.
-*
-* gounits source code
-* version: 1.0.0
-* author: bobliu0909@gmail.com
-* datetime: 2016-06-14
-* tar压缩与解压缩
- */
-
 package tarlib
 
 type StreamFormat int

@@ -1,12 +1,3 @@
-/*
-* (C) 2001-2017 humpback Inc.
-*
-* gounits source code
-* version: 1.0.0
-* author: bobliu0909@gmail.com
-* datetime: 2015-10-14
- */
-
 package gounits
 
 //gounits go基础库
