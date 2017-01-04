@@ -1,2 +1,0 @@
-# gounits
-golang utils
