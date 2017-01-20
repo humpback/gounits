@@ -6,26 +6,29 @@ import (
 	"syscall"
 )
 
-type QuitFunc func()
+type SignalQuitFunc func()
 
-func InitSignal(fn QuitFunc) {
+func InitSignal(fn SignalQuitFunc) {
 
 NEW_SIGNAL:
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT, syscall.SIGKILL)
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT, syscall.SIGKILL)
 	for {
 		select {
-		case s := <-c:
+		case sig := <-ch:
 			{
-				switch s {
+				switch sig {
 				case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT, syscall.SIGKILL:
 					if fn != nil {
 						fn()
 					}
-					os.Exit(0) //退出
+					close(ch)
+					return
 				case syscall.SIGHUP:
+					close(ch)
 					goto NEW_SIGNAL
 				default:
+					close(ch)
 					goto NEW_SIGNAL
 				}
 			}
