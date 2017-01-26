@@ -2,21 +2,46 @@ package http
 
 import (
 	"bytes"
+	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"time"
 )
 
+type tcpFunc func(*net.TCPConn, time.Duration) error
+
 type HttpClient struct {
 	client *http.Client
 }
 
-func NewHttpClient(client *http.Client) *HttpClient {
+func NewHTTPClientTimeout(rawurl string, tlsConfig *tls.Config, timeout time.Duration, setUserTimeout tcpFunc) (*HttpClient, *url.URL, error) {
+
+	u, err := url.Parse(rawurl)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if u.Scheme == "" || u.Scheme == "tcp" {
+		if tlsConfig == nil {
+			u.Scheme = "http"
+		} else {
+			u.Scheme = "https"
+		}
+	}
+
+	client := newHTTPClient(u, tlsConfig, timeout, setUserTimeout)
+	return &HttpClient{
+		client: client,
+	}, u, nil
+}
+
+func NewHTTPClient(client *http.Client) *HttpClient {
 
 	if client == nil {
 		client = http.DefaultClient
@@ -36,6 +61,34 @@ func NewHttpClient(client *http.Client) *HttpClient {
 	return &HttpClient{
 		client: client,
 	}
+}
+
+func newHTTPClient(u *url.URL, tlsConfig *tls.Config, timeout time.Duration, setUserTimeout tcpFunc) *http.Client {
+
+	httpTransport := &http.Transport{
+		TLSClientConfig: tlsConfig,
+	}
+
+	switch u.Scheme {
+	default: //tcp
+		httpTransport.Dial = func(proto, addr string) (net.Conn, error) {
+			conn, err := net.DialTimeout(proto, addr, timeout)
+			if tcpConn, ok := conn.(*net.TCPConn); ok && setUserTimeout != nil {
+				setUserTimeout(tcpConn, timeout)
+			}
+			return conn, err
+		}
+	case "unix":
+		socketPath := u.Path
+		unixDial := func(proto, addr string) (net.Conn, error) {
+			return net.DialTimeout("unix", socketPath, timeout)
+		}
+		httpTransport.Dial = unixDial
+		u.Scheme = "http"
+		u.Host = "unix.sock"
+		u.Path = ""
+	}
+	return &http.Client{Transport: httpTransport}
 }
 
 func (c *HttpClient) PostJSON(url string, request interface{}, response interface{}) error {

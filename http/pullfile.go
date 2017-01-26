@@ -17,7 +17,7 @@ func HttpPullFile(savefile string, remoteurl string, resumable bool) error {
 		return ErrFileOpenException
 	}
 
-	httpclient := NewHttpClient(nil)
+	httpclient := NewHTTPClient(nil)
 	if err := httpclient.GetFile(fd, remoteurl, resumable); err != nil {
 		fd.Close()
 		os.Remove(fpath)
