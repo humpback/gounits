@@ -17,7 +17,7 @@ GO_LINT=golint
 
 # Packages
 TOP_PACKAGE_DIR := github.com/humpback/gounits
-PACKAGE_LIST := system network logger http flocker container compress/tarlib algorithm
+PACKAGE_LIST := system network logger http fprocess flocker container compress/tarlib algorithm
 
 .PHONY: all build build-race test test-verbose deps update-deps install clean fmt vet lint
 

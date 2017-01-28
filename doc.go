@@ -9,3 +9,4 @@ package gounits
 //compress:   压缩与解压库，针对tar.gz或zip类的压缩、解压缩处理
 //http:       http基础库，对httpclient和httpserver进行基础访问包装
 //flocker:    文件互斥锁，文件锁定功能，带超时
+//fprocess:   进程互斥文件
