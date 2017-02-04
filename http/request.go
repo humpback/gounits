@@ -28,14 +28,29 @@ func Post(path string, query url.Values, body io.Reader, headers map[string][]st
 	return DefaultClient.Post(path, query, body, headers)
 }
 
+func PostJSON(path string, query url.Values, object interface{}, headers map[string][]string) (*Response, error) {
+
+	return DefaultClient.PostJSON(path, query, object, headers)
+}
+
 func Put(path string, query url.Values, body io.Reader, headers map[string][]string) (*Response, error) {
 
 	return DefaultClient.Put(path, query, body, headers)
 }
 
+func PutJSON(path string, query url.Values, object interface{}, headers map[string][]string) (*Response, error) {
+
+	return DefaultClient.PutJSON(path, query, object, headers)
+}
+
 func Patch(path string, query url.Values, body io.Reader, headers map[string][]string) (*Response, error) {
 
 	return DefaultClient.Patch(path, query, body, headers)
+}
+
+func PatchJSON(path string, query url.Values, object interface{}, headers map[string][]string) (*Response, error) {
+
+	return DefaultClient.PatchJSON(path, query, object, headers)
 }
 
 func Delete(path string, query url.Values, headers map[string][]string) (*Response, error) {
