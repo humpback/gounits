@@ -36,19 +36,18 @@ func (resp *Response) JSON(object interface{}) error {
 	return json.Unmarshal(buf, object)
 }
 
-func (resp *Response) JSONMapper() (map[string]interface{}, error) {
+func (resp *Response) JSONMapper(data interface{}) error {
 
-	var mapper map[string]interface{}
 	dec := json.NewDecoder(resp.body)
 	for {
-		if err := dec.Decode(mapper); err != nil {
+		if err := dec.Decode(data); err != nil {
 			if err == io.EOF {
 				break
 			}
-			return nil, err
+			return err
 		}
 	}
-	return mapper, nil
+	return nil
 }
 
 func (resp *Response) Header(key string) string {

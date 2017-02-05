@@ -1,5 +1,7 @@
 package http
 
+import "golang.org/x/net/proxy"
+
 import (
 	"crypto/tls"
 	"net"
@@ -98,6 +100,18 @@ func (client *HttpClient) SetProxy(proxy *url.URL) *HttpClient {
 	client.SetTransport(transport)
 	client.proxy = proxy
 	return client
+}
+
+func (client *HttpClient) SOCKS5(network string, addr string, auth *proxy.Auth, forward proxy.Dialer) (*HttpClient, error) {
+
+	dialer, err := proxy.SOCKS5(network, addr, auth, forward)
+	if err != nil {
+		return nil, err
+	}
+	transport := client.GetTransport()
+	transport.Dial = dialer.Dial
+	client.SetTransport(transport)
+	return client, nil
 }
 
 func (client *HttpClient) SetTLSClientConfig(tlsConfig *tls.Config) *HttpClient {
