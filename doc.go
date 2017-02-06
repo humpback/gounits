@@ -10,3 +10,4 @@ package gounits
 //http:       http基础库，对httpclient和httpserver进行基础访问包装
 //flocker:    文件互斥锁，文件锁定功能，带超时
 //fprocess:   进程互斥文件
+//convert:    类型转换库
