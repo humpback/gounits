@@ -147,11 +147,11 @@ func ConvertMapValueToTime(m map[string]interface{}, key string) (time.Time, err
 	return time.Time{}, ERR_CONVERT_INVALID
 }
 
-func ConvertMapValueToJSONObject(m map[string]interface{}, key string, i interface{}) error {
+func ConvertMapValueToJSONObject(m map[string]interface{}, key string, v interface{}) error {
 
 	if object, ret := m[key]; ret {
 		if value, ok := object.(string); ok {
-			return json.Unmarshal([]byte(value), i)
+			return json.Unmarshal([]byte(value), v)
 		}
 	}
 	return ERR_CONVERT_INVALID
