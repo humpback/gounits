@@ -22,7 +22,7 @@ func UUID(random bool) string {
 }
 
 // WriteUUIDToFile return a uuid string and write to file
-func UUIDToFile(fpath string) (string, error) {
+func UUIDFile(fpath string) (string, error) {
 
 	_, err := os.Stat(fpath)
 	if err != nil && !os.IsExist(err) {

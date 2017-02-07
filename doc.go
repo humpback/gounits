@@ -11,3 +11,5 @@ package gounits
 //flocker:    文件互斥锁，文件锁定功能，带超时
 //fprocess:   进程互斥文件
 //convert:    类型转换库
+//rand:       随机编码生成库
+//json:       json库
