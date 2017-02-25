@@ -146,6 +146,7 @@ func (client *HttpClient) doSendRequest(method string, path string, query url.Va
 		return nil, err
 	}
 
+	resp.rawurl = request.URL.String()
 	resp.body = response.Body
 	resp.header = response.Header
 	resp.statuscode = response.StatusCode
@@ -157,6 +158,7 @@ func (client *HttpClient) newRequest(method, path string, query url.Values, body
 	rawurl := &url.URL{
 		Path: path,
 	}
+
 	if len(query) > 0 {
 		rawurl.RawQuery = query.Encode()
 	}
