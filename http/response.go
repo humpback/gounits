@@ -8,6 +8,7 @@ import (
 )
 
 type Response struct {
+	rawurl     string
 	body       io.ReadCloser
 	header     http.Header
 	statuscode int
@@ -48,6 +49,11 @@ func (resp *Response) JSONMapper(data interface{}) error {
 		}
 	}
 	return nil
+}
+
+func (resp *Response) RawURL() string {
+
+	return resp.rawurl
 }
 
 func (resp *Response) Header(key string) string {
