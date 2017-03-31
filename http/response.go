@@ -7,6 +7,8 @@ import (
 	"net/http"
 )
 
+const ResponseBodyAllSize int64 = 0
+
 type Response struct {
 	rawurl     string
 	body       io.ReadCloser
@@ -73,6 +75,6 @@ func (resp *Response) StatusCode() int {
 
 func (resp *Response) Close() error {
 
-	io.CopyN(ioutil.Discard, resp.body, 512)
+	io.Copy(ioutil.Discard, resp.body)
 	return resp.body.Close()
 }
