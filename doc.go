@@ -2,7 +2,7 @@ package gounits
 
 //gounits go基础库
 //algorithm:  算法基础库
-//container:  容器基础库，对各种容器进行封装
+//utils:      基础单元，函数封装
 //network:    网络库基础库，网络地址转换，网卡获取
 //system:     系统基础库，守护进程，信号处理，路径处理等
 //logger:     日志基础库

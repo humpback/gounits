@@ -2,6 +2,8 @@
 #  humpback gounits Makefile 
 #
 
+export GOPATH=D:/work/projects/golang
+
 GO_CMD=go
 GO_BUILD=$(GO_CMD) build
 GO_BUILD_RACE=$(GO_CMD) build -race
@@ -16,8 +18,8 @@ GO_FMT=$(GO_CMD) fmt
 GO_LINT=golint
 
 # Packages
-TOP_PACKAGE_DIR := github.com/humpback/gounits
-PACKAGE_LIST := system network logger http fprocess flocker container compress/tarlib algorithm convert rand json
+TOP_PACKAGE_DIR := ./
+PACKAGE_LIST := system network logger http fprocess flocker utils compress/tarlib algorithm convert rand json
 
 .PHONY: all build build-race test test-verbose deps update-deps install clean fmt vet lint
 

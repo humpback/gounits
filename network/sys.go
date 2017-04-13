@@ -1,7 +1,5 @@
 package network
 
-import "github.com/humpback/gounits/container"
-
 import (
 	"fmt"
 	"net"
@@ -58,7 +56,14 @@ func GrabSystemRangeIdlePort(kind string, minPort uint32, maxPort uint32) (uint3
 	}
 
 	for port := minPort; port <= maxPort; port++ {
-		if !container.Contains(port, localPorts) {
+		found := false
+		for _, localport := range localPorts {
+			if localport == port {
+				found = true
+				break
+			}
+		}
+		if !found {
 			return port, nil
 		}
 	}
