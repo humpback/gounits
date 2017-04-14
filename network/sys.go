@@ -1,9 +1,13 @@
 package network
 
+import "github.com/humpback/gounits/utils"
+
 import (
 	"fmt"
+	"math/rand"
 	"net"
 	"strconv"
+	"time"
 )
 
 // GrabSystemRandomIdlePort is exported
@@ -55,17 +59,16 @@ func GrabSystemRangeIdlePort(kind string, minPort uint32, maxPort uint32) (uint3
 		}
 	}
 
+	ports := []uint32{}
 	for port := minPort; port <= maxPort; port++ {
-		found := false
-		for _, localport := range localPorts {
-			if localport == port {
-				found = true
-				break
-			}
-		}
-		if !found {
-			return port, nil
+		if ret := utils.Contains(port, localPorts); !ret {
+			ports = append(ports, port)
 		}
 	}
-	return 0, fmt.Errorf("call not be allocated valid.")
+
+	if len(ports) == 0 {
+		return 0, fmt.Errorf("call not be allocated valid.")
+	}
+	r := rand.New(rand.NewSource(time.Now().UTC().UnixNano()))
+	return ports[r.Intn(len(ports)-1)], nil
 }
