@@ -60,8 +60,8 @@ func NewWithTimeout(timeout time.Duration) *HttpClient {
 		if err != nil {
 			return conn, err
 		}
-		err = conn.SetDeadline(time.Now().Add(timeout))
-		return conn, err
+		//err = conn.SetDeadline(time.Now().Add(timeout))
+		return conn, nil
 	}
 	return client.SetTransport(transport)
 }
