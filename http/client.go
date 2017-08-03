@@ -50,16 +50,18 @@ func NewWithTimeout(timeout time.Duration) *HttpClient {
 
 	client := NewClient()
 	transport := client.GetTransport()
-	transport.MaxIdleConnsPerHost = 5
 	transport.Dial = func(network, addr string) (net.Conn, error) {
 		dial := net.Dialer{
 			Timeout:   timeout,
-			KeepAlive: 45 * time.Second,
+			KeepAlive: 60 * time.Second,
 		}
 		conn, err := dial.Dial(network, addr)
 		if err != nil {
 			return conn, err
 		}
+		transport.MaxIdleConns = 0
+		transport.MaxIdleConnsPerHost = 30
+		transport.IdleConnTimeout = 90 * time.Second
 		//err = conn.SetDeadline(time.Now().Add(timeout))
 		return conn, nil
 	}
