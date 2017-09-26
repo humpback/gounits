@@ -6,6 +6,7 @@ import (
 	"syscall"
 )
 
+//GetExitCode is exported
 func GetExitCode(err error) (int, error) {
 
 	exitcode := 0
@@ -14,10 +15,11 @@ func GetExitCode(err error) (int, error) {
 			return procexit.ExitStatus(), nil
 		}
 	}
-	return exitcode, fmt.Errorf("failed to get exit code")
+	return exitcode, fmt.Errorf("failed to get exit code.")
 }
 
-func PorcessExitCode(err error) int {
+//ErrorExitCode is exported
+func ErrorExitCode(err error) int {
 
 	if err != nil {
 		var (
