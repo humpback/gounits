@@ -41,6 +41,7 @@ func (lock *FileLocker) Lock() error {
 		return err
 	}
 
+	lock.fd = fd
 	pid := os.Getpid()
 	buff := bytes.NewBuffer([]byte(strconv.Itoa(pid)))
 	if _, err := fd.Write(buff.Bytes()); err == nil {
@@ -53,5 +54,7 @@ func (lock *FileLocker) Unlock() {
 
 	if lock.fd != nil {
 		lock.fd.Close()
+		os.Remove(lock.FileName)
+		lock.fd = nil
 	}
 }

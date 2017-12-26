@@ -19,7 +19,7 @@ GO_LINT=golint
 
 # Packages
 TOP_PACKAGE_DIR := ./
-PACKAGE_LIST := system network logger http fprocess flocker utils compress/tarlib algorithm convert rand json
+PACKAGE_LIST := system network logger http fprocess container flocker utils compress/tarlib algorithm convert rand json
 
 .PHONY: all build build-race test test-verbose deps update-deps install clean fmt vet lint
 

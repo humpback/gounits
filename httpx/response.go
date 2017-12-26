@@ -10,7 +10,7 @@ import (
 
 const ResponseBodyAllSize int64 = 0
 
-type Response struct {
+type HttpResponse struct {
 	rawurl     string
 	body       io.ReadCloser
 	header     http.Header
@@ -18,12 +18,17 @@ type Response struct {
 	statuscode int
 }
 
-func (resp *Response) Bytes() ([]byte, error) {
+func (resp *HttpResponse) Body() io.ReadCloser {
+
+	return resp.Body()
+}
+
+func (resp *HttpResponse) Bytes() ([]byte, error) {
 
 	return ioutil.ReadAll(resp.body)
 }
 
-func (resp *Response) String() string {
+func (resp *HttpResponse) String() string {
 
 	buf, err := resp.Bytes()
 	if err != nil {
@@ -32,7 +37,7 @@ func (resp *Response) String() string {
 	return string(buf)
 }
 
-func (resp *Response) JSON(object interface{}) error {
+func (resp *HttpResponse) JSON(object interface{}) error {
 
 	buf, err := resp.Bytes()
 	if err != nil {
@@ -41,7 +46,7 @@ func (resp *Response) JSON(object interface{}) error {
 	return json.Unmarshal(buf, object)
 }
 
-func (resp *Response) XML(object interface{}) error {
+func (resp *HttpResponse) XML(object interface{}) error {
 
 	buf, err := resp.Bytes()
 	if err != nil {
@@ -50,7 +55,7 @@ func (resp *Response) XML(object interface{}) error {
 	return xml.Unmarshal(buf, object)
 }
 
-func (resp *Response) JSONMapper(data interface{}) error {
+func (resp *HttpResponse) JSONMapper(data interface{}) error {
 
 	dec := json.NewDecoder(resp.body)
 	for {
@@ -64,7 +69,7 @@ func (resp *Response) JSONMapper(data interface{}) error {
 	return nil
 }
 
-func (resp *Response) XMLMapper(data interface{}) error {
+func (resp *HttpResponse) XMLMapper(data interface{}) error {
 
 	dec := xml.NewDecoder(resp.body)
 	for {
@@ -78,32 +83,32 @@ func (resp *Response) XMLMapper(data interface{}) error {
 	return nil
 }
 
-func (resp *Response) RawURL() string {
+func (resp *HttpResponse) RawURL() string {
 
 	return resp.rawurl
 }
 
-func (resp *Response) Header(key string) string {
+func (resp *HttpResponse) Header(key string) string {
 
 	return resp.header.Get(key)
 }
 
-func (resp *Response) Headers() http.Header {
+func (resp *HttpResponse) Headers() http.Header {
 
 	return resp.header
 }
 
-func (resp *Response) Status() string {
+func (resp *HttpResponse) Status() string {
 
 	return resp.status
 }
 
-func (resp *Response) StatusCode() int {
+func (resp *HttpResponse) StatusCode() int {
 
 	return resp.statuscode
 }
 
-func (resp *Response) Close() error {
+func (resp *HttpResponse) Close() error {
 
 	io.Copy(ioutil.Discard, resp.body)
 	return resp.body.Close()

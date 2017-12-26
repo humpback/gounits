@@ -8,7 +8,7 @@ import (
 	"net/url"
 )
 
-type Request struct {
+type HttpRequest struct {
 	Method  string
 	RawURL  string
 	Query   url.Values
@@ -16,7 +16,7 @@ type Request struct {
 	Headers map[string][]string
 }
 
-func (client *HttpClient) sendRequest(req *Request) (*Response, error) {
+func (client *HttpClient) sendRequest(req *HttpRequest) (*HttpResponse, error) {
 
 	if req == nil {
 		return nil, errors.New("client request invalid.")
@@ -27,7 +27,7 @@ func (client *HttpClient) sendRequest(req *Request) (*Response, error) {
 		req.Data = bytes.NewReader([]byte{})
 	}
 
-	request, err := client.httpRequest(req)
+	request, err := client.newRequest(req)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +41,7 @@ func (client *HttpClient) sendRequest(req *Request) (*Response, error) {
 		return nil, err
 	}
 
-	return &Response{
+	return &HttpResponse{
 		rawurl:     request.URL.String(),
 		body:       response.Body,
 		header:     response.Header,
@@ -50,7 +50,7 @@ func (client *HttpClient) sendRequest(req *Request) (*Response, error) {
 	}, nil
 }
 
-func (client *HttpClient) httpRequest(req *Request) (*http.Request, error) {
+func (client *HttpClient) newRequest(req *HttpRequest) (*http.Request, error) {
 
 	rawurl, err := url.Parse(req.RawURL)
 	if err != nil {
