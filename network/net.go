@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	ErrIpAddrEmpty      = errors.New("local ipaddr is empty.")
-	ErrDriveNameInvalid = errors.New("drivename invalid.")
+	ErrNoValidLocalAddr  = errors.New("no valid local address.")
+	ErrDeviceNameInvalid = errors.New("device name invalid.")
 )
 
 // Addr is implemented compatibility to psutil
@@ -153,44 +153,49 @@ func Interfaces() ([]InterfaceStat, error) {
 	return ret, nil
 }
 
-func GetLocalNetDriveInfo(name string) (*AddrInfo, error) {
+func GetLocalNetDeviceInfo(name string) (*AddrInfo, error) {
 
 	addrs, err := GetLocalNetAddrs()
 	if err != nil {
 		return nil, err
 	}
 
-	if len(addrs) == 0 {
-		if name == "" {
-			ip := GetDefaultIP()
-			if ip == "" {
-				return nil, ErrIpAddrEmpty
+	deviceName := strings.TrimSpace(name)
+	if len(addrs) == 0 { //本地无有效地址
+		if deviceName == "" || deviceName == "0.0.0.0" { //随机获取
+			if ip := GetDefaultIP(); ip != "" {
+				return &AddrInfo{
+					Name: "",
+					Mac:  "",
+					IP:   ip,
+				}, nil
 			}
-			return &AddrInfo{
-				Name: "",
-				Mac:  "",
-				IP:   ip,
-			}, nil
-		} else {
-			return nil, ErrIpAddrEmpty
 		}
+		return nil, ErrNoValidLocalAddr
 	}
 
-	var addr *AddrInfo = nil
-	if name == "" {
-		addr = addrs[0] //未传入设备信息，默认获取第一张网卡
-	} else {
-		for _, value := range addrs {
-			if value.Name == name {
-				addr = value //根据设备名称获取网卡信息
-				break
+	if deviceName == "" || deviceName == "0.0.0.0" {
+		return addrs[0], nil //未传入设备信息，默认获取第一张有效网卡地址
+	}
+
+	isIPv4 := false
+	inputIP := net.ParseIP(deviceName)
+	if inputIP != nil && inputIP.To4() != nil {
+		isIPv4 = true
+	}
+
+	for _, value := range addrs {
+		if isIPv4 {
+			if value.IP == deviceName {
+				return value, nil
+			}
+		} else {
+			if value.Name == deviceName {
+				return value, nil
 			}
 		}
-		if addr == nil {
-			return nil, ErrDriveNameInvalid
-		}
 	}
-	return addr, nil
+	return nil, ErrDeviceNameInvalid
 }
 
 func GetLocalNetAddrs() ([]*AddrInfo, error) {
