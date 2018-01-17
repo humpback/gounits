@@ -1,6 +1,7 @@
 package httpx
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -9,17 +10,17 @@ import (
 	"path/filepath"
 )
 
-func GetFile(save string, path string, query url.Values, headers map[string][]string) error {
+func GetFile(ctx context.Context, save string, path string, query url.Values, headers map[string][]string) error {
 
-	return DefaultClient.GetFile(save, path, query, headers)
+	return DefaultClient.GetFile(ctx, save, path, query, headers)
 }
 
-func GetFdWith(fd *os.File, path string, query url.Values, headers map[string][]string) error {
+func GetFdWith(ctx context.Context, fd *os.File, path string, query url.Values, headers map[string][]string) error {
 
-	return DefaultClient.GetFdWith(fd, path, query, headers)
+	return DefaultClient.GetFdWith(ctx, fd, path, query, headers)
 }
 
-func (client *HttpClient) GetFile(save string, path string, query url.Values, headers map[string][]string) error {
+func (client *HttpClient) GetFile(ctx context.Context, save string, path string, query url.Values, headers map[string][]string) error {
 
 	fpath, err := filepath.Abs(save)
 	if err != nil {
@@ -31,7 +32,7 @@ func (client *HttpClient) GetFile(save string, path string, query url.Values, he
 		return fmt.Errorf("client pull file open error, %s", err.Error())
 	}
 
-	if err := client.GetFdWith(fd, path, query, headers); err != nil {
+	if err := client.GetFdWith(ctx, fd, path, query, headers); err != nil {
 		fd.Close()
 		os.Remove(path)
 		return err
@@ -40,13 +41,13 @@ func (client *HttpClient) GetFile(save string, path string, query url.Values, he
 	return nil
 }
 
-func (client *HttpClient) GetFdWith(fd *os.File, path string, query url.Values, headers map[string][]string) error {
+func (client *HttpClient) GetFdWith(ctx context.Context, fd *os.File, path string, query url.Values, headers map[string][]string) error {
 
 	if fd == nil {
 		return fmt.Errorf("client get file fd invalid, %s", path)
 	}
 
-	resp, err := client.Get(path, query, headers)
+	resp, err := client.Get(ctx, path, query, headers)
 	if err != nil {
 		return err
 	}

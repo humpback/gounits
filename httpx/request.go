@@ -2,6 +2,7 @@ package httpx
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"io"
 	"net/http"
@@ -16,7 +17,7 @@ type HttpRequest struct {
 	Headers map[string][]string
 }
 
-func (client *HttpClient) sendRequest(req *HttpRequest) (*HttpResponse, error) {
+func (client *HttpClient) sendRequest(ctx context.Context, req *HttpRequest) (*HttpResponse, error) {
 
 	if req == nil {
 		return nil, errors.New("client request invalid.")
@@ -36,8 +37,13 @@ func (client *HttpClient) sendRequest(req *HttpRequest) (*HttpResponse, error) {
 		request.Header.Set("Content-Type", "text/plain")
 	}
 
-	response, err := client.c.Do(request)
+	response, err := client.c.Do(request.WithContext(ctx))
 	if err != nil {
+		select {
+		case <-ctx.Done():
+			err = ctx.Err()
+		default:
+		}
 		return nil, err
 	}
 

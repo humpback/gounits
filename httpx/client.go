@@ -4,6 +4,7 @@ import "golang.org/x/net/proxy"
 
 import (
 	"bytes"
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"encoding/xml"
@@ -178,74 +179,74 @@ func (client *HttpClient) SetTLSClientConfig(tlsConfig *tls.Config) *HttpClient 
 	return client
 }
 
-func Head(path string, query url.Values, headers map[string][]string) (*HttpResponse, error) {
+func Head(ctx context.Context, path string, query url.Values, headers map[string][]string) (*HttpResponse, error) {
 
-	return DefaultClient.Head(path, query, headers)
+	return DefaultClient.Head(ctx, path, query, headers)
 }
 
-func Options(path string, query url.Values, headers map[string][]string) (*HttpResponse, error) {
+func Options(ctx context.Context, path string, query url.Values, headers map[string][]string) (*HttpResponse, error) {
 
-	return DefaultClient.Options(path, query, headers)
+	return DefaultClient.Options(ctx, path, query, headers)
 }
 
-func Get(path string, query url.Values, headers map[string][]string) (*HttpResponse, error) {
+func Get(ctx context.Context, path string, query url.Values, headers map[string][]string) (*HttpResponse, error) {
 
-	return DefaultClient.Get(path, query, headers)
+	return DefaultClient.Get(ctx, path, query, headers)
 }
 
-func Put(path string, query url.Values, data io.Reader, headers map[string][]string) (*HttpResponse, error) {
+func Put(ctx context.Context, path string, query url.Values, data io.Reader, headers map[string][]string) (*HttpResponse, error) {
 
-	return DefaultClient.Put(path, query, data, headers)
+	return DefaultClient.Put(ctx, path, query, data, headers)
 }
 
-func PutJSON(path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
+func PutJSON(ctx context.Context, path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
 
-	return DefaultClient.PutJSON(path, query, object, headers)
+	return DefaultClient.PutJSON(ctx, path, query, object, headers)
 }
 
-func PutXML(path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
+func PutXML(ctx context.Context, path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
 
-	return DefaultClient.PutXML(path, query, object, headers)
+	return DefaultClient.PutXML(ctx, path, query, object, headers)
 }
 
-func Post(path string, query url.Values, data io.Reader, headers map[string][]string) (*HttpResponse, error) {
+func Post(ctx context.Context, path string, query url.Values, data io.Reader, headers map[string][]string) (*HttpResponse, error) {
 
-	return DefaultClient.Post(path, query, data, headers)
+	return DefaultClient.Post(ctx, path, query, data, headers)
 }
 
-func PostJSON(path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
+func PostJSON(ctx context.Context, path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
 
-	return DefaultClient.PostJSON(path, query, object, headers)
+	return DefaultClient.PostJSON(ctx, path, query, object, headers)
 }
 
-func PostXML(path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
+func PostXML(ctx context.Context, path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
 
-	return DefaultClient.PostXML(path, query, object, headers)
+	return DefaultClient.PostXML(ctx, path, query, object, headers)
 }
 
-func Patch(path string, query url.Values, data io.Reader, headers map[string][]string) (*HttpResponse, error) {
+func Patch(ctx context.Context, path string, query url.Values, data io.Reader, headers map[string][]string) (*HttpResponse, error) {
 
-	return DefaultClient.Patch(path, query, data, headers)
+	return DefaultClient.Patch(ctx, path, query, data, headers)
 }
 
-func PatchJSON(path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
+func PatchJSON(ctx context.Context, path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
 
-	return DefaultClient.PatchJSON(path, query, object, headers)
+	return DefaultClient.PatchJSON(ctx, path, query, object, headers)
 }
 
-func PatchXML(path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
+func PatchXML(ctx context.Context, path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
 
-	return DefaultClient.PatchXML(path, query, object, headers)
+	return DefaultClient.PatchXML(ctx, path, query, object, headers)
 }
 
-func Delete(path string, query url.Values, headers map[string][]string) (*HttpResponse, error) {
+func Delete(ctx context.Context, path string, query url.Values, headers map[string][]string) (*HttpResponse, error) {
 
-	return DefaultClient.Delete(path, query, headers)
+	return DefaultClient.Delete(ctx, path, query, headers)
 }
 
-func (client *HttpClient) Head(path string, query url.Values, headers map[string][]string) (*HttpResponse, error) {
+func (client *HttpClient) Head(ctx context.Context, path string, query url.Values, headers map[string][]string) (*HttpResponse, error) {
 
-	return client.sendRequest(&HttpRequest{
+	return client.sendRequest(ctx, &HttpRequest{
 		Method:  http.MethodHead,
 		RawURL:  path,
 		Query:   query,
@@ -254,9 +255,9 @@ func (client *HttpClient) Head(path string, query url.Values, headers map[string
 	})
 }
 
-func (client *HttpClient) Options(path string, query url.Values, headers map[string][]string) (*HttpResponse, error) {
+func (client *HttpClient) Options(ctx context.Context, path string, query url.Values, headers map[string][]string) (*HttpResponse, error) {
 
-	return client.sendRequest(&HttpRequest{
+	return client.sendRequest(ctx, &HttpRequest{
 		Method:  http.MethodOptions,
 		RawURL:  path,
 		Query:   query,
@@ -265,9 +266,9 @@ func (client *HttpClient) Options(path string, query url.Values, headers map[str
 	})
 }
 
-func (client *HttpClient) Get(path string, query url.Values, headers map[string][]string) (*HttpResponse, error) {
+func (client *HttpClient) Get(ctx context.Context, path string, query url.Values, headers map[string][]string) (*HttpResponse, error) {
 
-	return client.sendRequest(&HttpRequest{
+	return client.sendRequest(ctx, &HttpRequest{
 		Method:  http.MethodGet,
 		RawURL:  path,
 		Query:   query,
@@ -276,9 +277,9 @@ func (client *HttpClient) Get(path string, query url.Values, headers map[string]
 	})
 }
 
-func (client *HttpClient) Put(path string, query url.Values, data io.Reader, headers map[string][]string) (*HttpResponse, error) {
+func (client *HttpClient) Put(ctx context.Context, path string, query url.Values, data io.Reader, headers map[string][]string) (*HttpResponse, error) {
 
-	return client.sendRequest(&HttpRequest{
+	return client.sendRequest(ctx, &HttpRequest{
 		Method:  http.MethodPut,
 		RawURL:  path,
 		Query:   query,
@@ -287,7 +288,7 @@ func (client *HttpClient) Put(path string, query url.Values, data io.Reader, hea
 	})
 }
 
-func (client *HttpClient) PutJSON(path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
+func (client *HttpClient) PutJSON(ctx context.Context, path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
 
 	httpBuffer, err := client.encodeJson(object, headers)
 	defer client.putBuffer(httpBuffer.Data)
@@ -295,7 +296,7 @@ func (client *HttpClient) PutJSON(path string, query url.Values, object interfac
 		return nil, err
 	}
 
-	return client.sendRequest(&HttpRequest{
+	return client.sendRequest(ctx, &HttpRequest{
 		Method:  http.MethodPut,
 		RawURL:  path,
 		Query:   query,
@@ -304,7 +305,7 @@ func (client *HttpClient) PutJSON(path string, query url.Values, object interfac
 	})
 }
 
-func (client *HttpClient) PutXML(path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
+func (client *HttpClient) PutXML(ctx context.Context, path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
 
 	httpBuffer, err := client.encodeXml(object, headers)
 	defer client.putBuffer(httpBuffer.Data)
@@ -312,7 +313,7 @@ func (client *HttpClient) PutXML(path string, query url.Values, object interface
 		return nil, err
 	}
 
-	return client.sendRequest(&HttpRequest{
+	return client.sendRequest(ctx, &HttpRequest{
 		Method:  http.MethodPut,
 		RawURL:  path,
 		Query:   query,
@@ -321,9 +322,9 @@ func (client *HttpClient) PutXML(path string, query url.Values, object interface
 	})
 }
 
-func (client *HttpClient) Post(path string, query url.Values, data io.Reader, headers map[string][]string) (*HttpResponse, error) {
+func (client *HttpClient) Post(ctx context.Context, path string, query url.Values, data io.Reader, headers map[string][]string) (*HttpResponse, error) {
 
-	return client.sendRequest(&HttpRequest{
+	return client.sendRequest(ctx, &HttpRequest{
 		Method:  http.MethodPost,
 		RawURL:  path,
 		Query:   query,
@@ -332,7 +333,7 @@ func (client *HttpClient) Post(path string, query url.Values, data io.Reader, he
 	})
 }
 
-func (client *HttpClient) PostJSON(path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
+func (client *HttpClient) PostJSON(ctx context.Context, path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
 
 	httpBuffer, err := client.encodeJson(object, headers)
 	defer client.putBuffer(httpBuffer.Data)
@@ -340,7 +341,7 @@ func (client *HttpClient) PostJSON(path string, query url.Values, object interfa
 		return nil, err
 	}
 
-	return client.sendRequest(&HttpRequest{
+	return client.sendRequest(ctx, &HttpRequest{
 		Method:  http.MethodPost,
 		RawURL:  path,
 		Query:   query,
@@ -349,7 +350,7 @@ func (client *HttpClient) PostJSON(path string, query url.Values, object interfa
 	})
 }
 
-func (client *HttpClient) PostXML(path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
+func (client *HttpClient) PostXML(ctx context.Context, path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
 
 	httpBuffer, err := client.encodeXml(object, headers)
 	defer client.putBuffer(httpBuffer.Data)
@@ -357,7 +358,7 @@ func (client *HttpClient) PostXML(path string, query url.Values, object interfac
 		return nil, err
 	}
 
-	return client.sendRequest(&HttpRequest{
+	return client.sendRequest(ctx, &HttpRequest{
 		Method:  http.MethodPost,
 		RawURL:  path,
 		Query:   query,
@@ -366,9 +367,9 @@ func (client *HttpClient) PostXML(path string, query url.Values, object interfac
 	})
 }
 
-func (client *HttpClient) Patch(path string, query url.Values, data io.Reader, headers map[string][]string) (*HttpResponse, error) {
+func (client *HttpClient) Patch(ctx context.Context, path string, query url.Values, data io.Reader, headers map[string][]string) (*HttpResponse, error) {
 
-	return client.sendRequest(&HttpRequest{
+	return client.sendRequest(ctx, &HttpRequest{
 		Method:  http.MethodPatch,
 		RawURL:  path,
 		Query:   query,
@@ -377,7 +378,7 @@ func (client *HttpClient) Patch(path string, query url.Values, data io.Reader, h
 	})
 }
 
-func (client *HttpClient) PatchJSON(path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
+func (client *HttpClient) PatchJSON(ctx context.Context, path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
 
 	httpBuffer, err := client.encodeJson(object, headers)
 	defer client.putBuffer(httpBuffer.Data)
@@ -385,7 +386,7 @@ func (client *HttpClient) PatchJSON(path string, query url.Values, object interf
 		return nil, err
 	}
 
-	return client.sendRequest(&HttpRequest{
+	return client.sendRequest(ctx, &HttpRequest{
 		Method:  http.MethodPatch,
 		RawURL:  path,
 		Query:   query,
@@ -394,7 +395,7 @@ func (client *HttpClient) PatchJSON(path string, query url.Values, object interf
 	})
 }
 
-func (client *HttpClient) PatchXML(path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
+func (client *HttpClient) PatchXML(ctx context.Context, path string, query url.Values, object interface{}, headers map[string][]string) (*HttpResponse, error) {
 
 	httpBuffer, err := client.encodeXml(object, headers)
 	defer client.putBuffer(httpBuffer.Data)
@@ -402,7 +403,7 @@ func (client *HttpClient) PatchXML(path string, query url.Values, object interfa
 		return nil, err
 	}
 
-	return client.sendRequest(&HttpRequest{
+	return client.sendRequest(ctx, &HttpRequest{
 		Method:  http.MethodPatch,
 		RawURL:  path,
 		Query:   query,
@@ -411,9 +412,9 @@ func (client *HttpClient) PatchXML(path string, query url.Values, object interfa
 	})
 }
 
-func (client *HttpClient) Delete(path string, query url.Values, headers map[string][]string) (*HttpResponse, error) {
+func (client *HttpClient) Delete(ctx context.Context, path string, query url.Values, headers map[string][]string) (*HttpResponse, error) {
 
-	return client.sendRequest(&HttpRequest{
+	return client.sendRequest(ctx, &HttpRequest{
 		Method:  http.MethodDelete,
 		RawURL:  path,
 		Query:   query,
