@@ -20,7 +20,7 @@ type HttpResponse struct {
 
 func (resp *HttpResponse) Body() io.ReadCloser {
 
-	return resp.Body()
+	return resp.body
 }
 
 func (resp *HttpResponse) Bytes() ([]byte, error) {
