@@ -156,3 +156,14 @@ func ConvertMapValueToJSONObject(m map[string]interface{}, key string, v interfa
 	}
 	return ERR_CONVERT_INVALID
 }
+
+func InterfaceToMap(obj interface{}) map[string]interface{} {
+
+	t := reflect.TypeOf(obj)
+	v := reflect.ValueOf(obj)
+	var data = make(map[string]interface{})
+	for i := 0; i < t.NumField(); i++ {
+		data[t.Field(i).Name] = v.Field(i).Interface()
+	}
+	return data
+}
